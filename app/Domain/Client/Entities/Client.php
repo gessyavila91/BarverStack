@@ -1,18 +1,21 @@
 <?php
 
-namespace App\Models;
+namespace App\Domain\Client\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Barbershop extends Model
+class Client extends Model
 {
     use HasFactory;
 
-    protected $table = 'barbershops';
+    protected $table = 'clients';
 
     protected $fillable = [
         'name',
-        'address',
+        'phone',
+        'email',
+        'birthday',
+        'occupation',
     ];
 }

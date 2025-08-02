@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Service;
-use Illuminate\Http\Request;
+use App\Application\Service\DTOs\ServiceDTO;
+use App\Domain\Service\Contracts\ServiceServiceInterface;
+use App\Domain\Service\Entities\Service;
+use App\Http\Requests\Service\CreateServiceRequest;
+use App\Http\Requests\Service\UpdateServiceRequest;
 
 class ServiceController extends Controller
 {
-    public function index()
+    public function __construct(private ServiceServiceInterface $service)
     {
-        return response()->json(Service::all());
     }
 
-    public function store(Request $request)
+    public function index()
     {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'cost' => 'required|numeric',
-        ]);
+        return response()->json($this->service->all());
+    }
 
-        $service = Service::create($data);
+    public function store(CreateServiceRequest $request)
+    {
+        $service = $this->service->create(ServiceDTO::fromArray($request->validated()));
 
         return response()->json($service, 201);
     }
@@ -29,21 +31,16 @@ class ServiceController extends Controller
         return response()->json($service);
     }
 
-    public function update(Request $request, Service $service)
+    public function update(UpdateServiceRequest $request, Service $service)
     {
-        $data = $request->validate([
-            'name' => 'sometimes|required|string',
-            'cost' => 'sometimes|required|numeric',
-        ]);
-
-        $service->update($data);
+        $service = $this->service->update($service, ServiceDTO::fromArray($request->validated()));
 
         return response()->json($service);
     }
 
     public function destroy(Service $service)
     {
-        $service->delete();
+        $this->service->delete($service);
 
         return response()->json(null, 204);
     }

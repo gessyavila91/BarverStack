@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Barbershop;
+use App\Domain\Barbershop\Entities\Barbershop;
 use Illuminate\Database\Seeder;
 
 class BarbershopSeeder extends Seeder

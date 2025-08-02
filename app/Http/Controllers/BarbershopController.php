@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Barbershop;
-use Illuminate\Http\Request;
+use App\Application\Barbershop\DTOs\BarbershopDTO;
+use App\Domain\Barbershop\Contracts\BarbershopServiceInterface;
+use App\Domain\Barbershop\Entities\Barbershop;
+use App\Http\Requests\Barbershop\CreateBarbershopRequest;
+use App\Http\Requests\Barbershop\UpdateBarbershopRequest;
 
 class BarbershopController extends Controller
 {
-    public function index()
+    public function __construct(private BarbershopServiceInterface $service)
     {
-        return response()->json(Barbershop::all());
     }
 
-    public function store(Request $request)
+    public function index()
     {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'address' => 'required|string',
-        ]);
+        return response()->json($this->service->all());
+    }
 
-        $barbershop = Barbershop::create($data);
+    public function store(CreateBarbershopRequest $request)
+    {
+        $barbershop = $this->service->create(BarbershopDTO::fromArray($request->validated()));
 
         return response()->json($barbershop, 201);
     }
@@ -29,21 +31,16 @@ class BarbershopController extends Controller
         return response()->json($barbershop);
     }
 
-    public function update(Request $request, Barbershop $barbershop)
+    public function update(UpdateBarbershopRequest $request, Barbershop $barbershop)
     {
-        $data = $request->validate([
-            'name' => 'sometimes|required|string',
-            'address' => 'sometimes|required|string',
-        ]);
-
-        $barbershop->update($data);
+        $barbershop = $this->service->update($barbershop, BarbershopDTO::fromArray($request->validated()));
 
         return response()->json($barbershop);
     }
 
     public function destroy(Barbershop $barbershop)
     {
-        $barbershop->delete();
+        $this->service->delete($barbershop);
 
         return response()->json(null, 204);
     }

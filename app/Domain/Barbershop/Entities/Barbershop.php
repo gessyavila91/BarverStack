@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace App\Domain\Barbershop\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class Barbershop extends Model
 {
     use HasFactory;
 
-    protected $table = 'services';
+    protected $table = 'barbershops';
 
     protected $fillable = [
         'name',
-        'cost',
+        'address',
     ];
 }

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Barbershop;
+use App\Domain\Barbershop\Entities\Barbershop;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

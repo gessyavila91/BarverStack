@@ -1,21 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace App\Domain\Service\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Service extends Model
 {
     use HasFactory;
 
-    protected $table = 'clients';
+    protected $table = 'services';
 
     protected $fillable = [
         'name',
-        'phone',
-        'email',
-        'birthday',
-        'occupation',
+        'cost',
     ];
 }
