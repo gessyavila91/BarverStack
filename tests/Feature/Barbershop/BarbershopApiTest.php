@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Barbershop;
 
 use App\Domain\Barbershop\Entities\Barbershop;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -67,6 +67,14 @@ class BarbershopApiTest extends TestCase
         $response->assertStatus(204);
 
         $this->assertDatabaseMissing('barbershops', ['id' => $barbershop->id]);
+    }
+
+    public function test_validation_error_on_create_barbershop(): void
+    {
+        $response = $this->postJson('/api/barbershops', []);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['name', 'address']);
     }
 }
 

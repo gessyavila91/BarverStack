@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Orchid\Screens;
+namespace App\Orchid\Screens\Barbershop;
 
 use App\Domain\Barbershop\Entities\Barbershop;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Screen\TD;
-use Orchid\Screen\Actions\Link;
 
-class BarbershopScreen extends Screen
+class BarbershopListScreen extends Screen
 {
     public function query(): iterable
     {
@@ -20,15 +19,6 @@ class BarbershopScreen extends Screen
     public function name(): ?string
     {
         return 'Barbershops';
-    }
-
-    public function commandBar(): iterable
-    {
-        return [
-            Link::make('Create Barbershop')
-                ->icon('plus')
-                ->route('platform.barbershops.create'),
-        ];
     }
 
     public function layout(): iterable

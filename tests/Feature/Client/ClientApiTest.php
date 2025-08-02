@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Client;
 
 use App\Domain\Client\Entities\Client;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -70,6 +70,14 @@ class ClientApiTest extends TestCase
         $response->assertStatus(204);
 
         $this->assertDatabaseMissing('clients', ['id' => $client->id]);
+    }
+
+    public function test_validation_error_on_create_client(): void
+    {
+        $response = $this->postJson('/api/clients', []);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['name']);
     }
 }
 

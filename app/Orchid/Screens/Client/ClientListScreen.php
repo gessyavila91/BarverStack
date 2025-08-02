@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Orchid\Screens;
+namespace App\Orchid\Screens\Client;
 
 use App\Domain\Client\Entities\Client;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Screen\TD;
-use Orchid\Screen\Actions\Link;
 
-class ClientScreen extends Screen
+class ClientListScreen extends Screen
 {
     public function query(): iterable
     {
@@ -20,15 +19,6 @@ class ClientScreen extends Screen
     public function name(): ?string
     {
         return 'Clients';
-    }
-
-    public function commandBar(): iterable
-    {
-        return [
-            Link::make('Create Client')
-                ->icon('plus')
-                ->route('platform.clients.create'),
-        ];
     }
 
     public function layout(): iterable

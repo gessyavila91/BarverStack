@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Orchid\Screens;
+namespace App\Orchid\Screens\Service;
 
 use App\Domain\Service\Entities\Service;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Screen\TD;
-use Orchid\Screen\Actions\Link;
 
-class ServiceScreen extends Screen
+class ServiceListScreen extends Screen
 {
     public function query(): iterable
     {
@@ -20,15 +19,6 @@ class ServiceScreen extends Screen
     public function name(): ?string
     {
         return 'Services';
-    }
-
-    public function commandBar(): iterable
-    {
-        return [
-            Link::make('Create Service')
-                ->icon('plus')
-                ->route('platform.services.create'),
-        ];
     }
 
     public function layout(): iterable

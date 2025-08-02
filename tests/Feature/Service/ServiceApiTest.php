@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Service;
 
 use App\Domain\Service\Entities\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -67,6 +67,14 @@ class ServiceApiTest extends TestCase
         $response->assertStatus(204);
 
         $this->assertDatabaseMissing('services', ['id' => $service->id]);
+    }
+
+    public function test_validation_error_on_create_service(): void
+    {
+        $response = $this->postJson('/api/services', []);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['name', 'cost']);
     }
 }
 
