@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\Barberia;
+use App\Models\Barbershop;
 use Illuminate\Database\Seeder;
 
-class BarberiaSeeder extends Seeder
+class BarbershopSeeder extends Seeder
 {
     public function run(): void
     {
-        Barberia::factory()->count(5)->create();
+        Barbershop::factory()->count(5)->create();
     }
 }

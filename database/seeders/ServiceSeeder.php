@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\Cliente;
+use App\Models\Service;
 use Illuminate\Database\Seeder;
 
-class ClienteSeeder extends Seeder
+class ServiceSeeder extends Seeder
 {
     public function run(): void
     {
-        Cliente::factory()->count(10)->create();
+        Service::factory()->count(8)->create();
     }
 }

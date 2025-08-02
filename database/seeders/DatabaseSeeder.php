@@ -19,9 +19,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            ClienteSeeder::class,
-            BarberiaSeeder::class,
-            ServicioSeeder::class,
+            ClientSeeder::class,
+            BarbershopSeeder::class,
+            ServiceSeeder::class,
         ]);
     }
 }

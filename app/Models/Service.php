@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Barberia extends Model
+class Service extends Model
 {
     use HasFactory;
 
-    protected $table = 'barberias';
+    protected $table = 'services';
 
     protected $fillable = [
-        'nombre',
-        'direccion',
+        'name',
+        'cost',
     ];
 }
