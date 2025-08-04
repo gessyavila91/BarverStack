@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Barbershop\BarbershopListScreen;
+use App\Orchid\Screens\Client\ClientEditScreen;
 use App\Orchid\Screens\Client\ClientListScreen;
 use App\Orchid\Screens\Service\ServiceListScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
@@ -81,4 +82,6 @@ Route::screen('roles', RoleListScreen::class)
 // Custom business screens
 Route::screen('barbershops', BarbershopListScreen::class)->name('platform.barbershops');
 Route::screen('clients', ClientListScreen::class)->name('platform.clients');
+Route::screen('clients/create', ClientEditScreen::class)->name('platform.clients.create');
+Route::screen('clients/{client}/edit', ClientEditScreen::class)->name('platform.clients.edit');
 Route::screen('services', ServiceListScreen::class)->name('platform.services');

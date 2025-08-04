@@ -69,7 +69,7 @@ class ClientApiTest extends TestCase
 
         $response->assertStatus(204);
 
-        $this->assertDatabaseMissing('clients', ['id' => $client->id]);
+        $this->assertSoftDeleted('clients', ['id' => $client->id]);
     }
 
     public function test_validation_error_on_create_client(): void
