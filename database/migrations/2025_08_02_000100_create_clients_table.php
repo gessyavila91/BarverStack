@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->date('birthday')->nullable();
             $table->string('occupation')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
