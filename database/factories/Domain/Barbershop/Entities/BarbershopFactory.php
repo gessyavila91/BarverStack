@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Domain\Barbershop\Entities;
 
 use App\Domain\Barbershop\Entities\Barbershop;
 use Illuminate\Database\Eloquent\Factories\Factory;
