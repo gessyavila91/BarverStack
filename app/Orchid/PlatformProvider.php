@@ -26,11 +26,11 @@ class PlatformProvider extends OrchidServiceProvider
     }
 
     /**
-     * Register the application menu.
+     * Register the application main menu.
      *
      * @return Menu[]
      */
-    public function menu(): array
+    public function registerMainMenu(): array
     {
         return [
             Menu::make('Dashboard')
@@ -67,11 +67,23 @@ class PlatformProvider extends OrchidServiceProvider
     }
 
     /**
+     * Backwards compatible hook for legacy Orchid versions.
+     *
+     * @deprecated use registerMainMenu instead.
+     *
+     * @return Menu[]
+     */
+    public function menu(): array
+    {
+        return $this->registerMainMenu();
+    }
+
+    /**
      * Register permissions for the application.
      *
      * @return ItemPermission[]
      */
-    public function permissions(): array
+    public function registerPermissions(): array
     {
         return [
             ItemPermission::group(__('System'))
@@ -83,5 +95,17 @@ class PlatformProvider extends OrchidServiceProvider
                 ->addPermission('platform.barbershops', 'Barbershops')
                 ->addPermission('platform.services', 'Services'),
         ];
+    }
+
+    /**
+     * Backwards compatible hook for legacy Orchid versions.
+     *
+     * @deprecated use registerPermissions instead.
+     *
+     * @return ItemPermission[]
+     */
+    public function permissions(): array
+    {
+        return $this->registerPermissions();
     }
 }
