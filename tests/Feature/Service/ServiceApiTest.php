@@ -27,7 +27,7 @@ class ServiceApiTest extends TestCase
 
     public function test_can_list_services(): void
     {
-        Service::factory()->create(['name' => 'Shave']);
+        Service::factory();
 
         $response = $this->getJson('/api/services');
 
