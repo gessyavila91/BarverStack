@@ -45,8 +45,17 @@ class ServiceEditScreen extends Screen
                     ->required(),
                 Input::make('service.cost')
                     ->title('Cost')
-                    ->type('number')
-                    ->step('0.01')
+                    ->type('text')
+                    ->mask([
+                        'alias' => 'decimal',
+                        'digits' => 2,
+                        'digitsOptional' => false,
+                        'groupSeparator' => ',',
+                        'radixPoint' => '.',
+                        'autoGroup' => true,
+                        'rightAlign' => false,
+                        'removeMaskOnSubmit' => true,
+                    ])
                     ->required(),
             ]),
         ];
