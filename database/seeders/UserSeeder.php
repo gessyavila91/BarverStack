@@ -39,6 +39,21 @@ class UserSeeder extends Seeder
             'email' => 'auditor@barverstack.test',
             'role' => 'auditor',
         ],
+        [
+            'name' => 'Lead Barber',
+            'email' => 'barber.lead@barverstack.test',
+            'role' => 'barber',
+        ],
+        [
+            'name' => 'Senior Barber',
+            'email' => 'barber.senior@barverstack.test',
+            'role' => 'barber',
+        ],
+        [
+            'name' => 'Junior Barber',
+            'email' => 'barber.junior@barverstack.test',
+            'role' => 'barber',
+        ],
     ];
 
     /**

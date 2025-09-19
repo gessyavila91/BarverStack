@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Orchid\Screens\PlatformScreen;
+use App\Orchid\Screens\Appointment\AppointmentEditScreen;
+use App\Orchid\Screens\Appointment\AppointmentListScreen;
 use App\Orchid\Screens\Barbershop\BarbershopEditScreen;
 use App\Orchid\Screens\Barbershop\BarbershopListScreen;
 use App\Orchid\Screens\Client\ClientEditScreen;
@@ -91,3 +93,6 @@ Route::screen('clients/{client}/edit', ClientEditScreen::class)->name('platform.
 Route::screen('services', ServiceListScreen::class)->name('platform.services');
 Route::screen('services/create', ServiceEditScreen::class)->name('platform.services.create');
 Route::screen('services/{service}/edit', ServiceEditScreen::class)->name('platform.services.edit');
+Route::screen('appointments', AppointmentListScreen::class)->name('platform.appointments');
+Route::screen('appointments/create', AppointmentEditScreen::class)->name('platform.appointments.create');
+Route::screen('appointments/{appointment}/edit', AppointmentEditScreen::class)->name('platform.appointments.edit');

@@ -25,6 +25,7 @@ class RoleSeeder extends Seeder
                 'platform.clients' => true,
                 'platform.barbershops' => true,
                 'platform.services' => true,
+                'platform.appointments' => true,
             ],
         ],
         'supervisor' => [
@@ -33,6 +34,7 @@ class RoleSeeder extends Seeder
                 'platform.clients' => true,
                 'platform.barbershops' => true,
                 'platform.services' => true,
+                'platform.appointments' => true,
             ],
         ],
         'receptionist' => [
@@ -40,6 +42,7 @@ class RoleSeeder extends Seeder
             'permissions' => [
                 'platform.clients' => true,
                 'platform.services' => true,
+                'platform.appointments' => true,
             ],
         ],
         'auditor' => [
@@ -48,6 +51,15 @@ class RoleSeeder extends Seeder
                 'platform.clients' => true,
                 'platform.barbershops' => true,
                 'platform.services' => true,
+                'platform.appointments' => true,
+            ],
+        ],
+        'barber' => [
+            'name' => 'Barber',
+            'permissions' => [
+                'platform.appointments' => true,
+                'platform.clients' => true,
+                'platform.barbershops' => true,
             ],
         ],
     ];

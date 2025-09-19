@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Domain\Appointment\Entities\Appointment;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Orchid\Filters\Types\Like;
 use Orchid\Filters\Types\Where;
 use Orchid\Filters\Types\WhereDateStartEnd;
@@ -66,4 +69,14 @@ class User extends Authenticatable
         'updated_at',
         'created_at',
     ];
+
+    public function scopeBarbers(Builder $query): Builder
+    {
+        return $query->whereHas('roles', fn (Builder $builder) => $builder->where('slug', 'barber'));
+    }
+
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class, 'barber_id');
+    }
 }
