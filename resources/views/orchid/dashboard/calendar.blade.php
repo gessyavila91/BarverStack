@@ -129,7 +129,9 @@
     <script>
         (function () {
             const readyEvents = ['DOMContentLoaded', 'turbo:load', 'orchid:screen:rendered'];
-            let calendar, rawEvents = [];
+            let calendar;
+            let rawEvents = [];
+            let listenersRegistered = false;
 
             const computeHeight = () => {
                 const cal = document.getElementById('appointment-calendar');
@@ -161,103 +163,112 @@
                 const el = document.getElementById('appointment-calendar');
                 if (!el || typeof FullCalendar === 'undefined') return;
 
-                try { rawEvents = JSON.parse(el.dataset.events || '[]'); } catch { rawEvents = []; }
+                if (!calendar) {
+                    try { rawEvents = JSON.parse(el.dataset.events || '[]'); } catch { rawEvents = []; }
 
-                calendar = new FullCalendar.Calendar(el, {
-                    initialView: 'timeGridWeek',
-                    headerToolbar: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
-                    },
-                    slotMinTime: '07:00:00',
-                    slotMaxTime: '22:00:00',
-                    slotDuration: '00:30:00',
-                    slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
-                    expandRows: true,
-                    height: 'auto',
-                    navLinks: true,
-                    nowIndicator: true,
-                    stickyHeaderDates: true,
-                    locale: document.documentElement.lang || 'es',
-                    displayEventTime: false,
-                    eventDisplay: 'block',
-                    eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
-                    events: [],
-                    eventContent(arg) {
-                        const p = arg.event.extendedProps || {};
-                        const root = document.createElement('div');
-                        root.className = 'fc-appointment__content';
+                    calendar = new FullCalendar.Calendar(el, {
+                        initialView: 'timeGridWeek',
+                        headerToolbar: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+                        },
+                        slotMinTime: '07:00:00',
+                        slotMaxTime: '22:00:00',
+                        slotDuration: '00:30:00',
+                        slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+                        expandRows: true,
+                        height: 'auto',
+                        navLinks: true,
+                        nowIndicator: true,
+                        stickyHeaderDates: true,
+                        locale: document.documentElement.lang || 'es',
+                        displayEventTime: false,
+                        eventDisplay: 'block',
+                        eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+                        events: [],
+                        eventContent(arg) {
+                            const p = arg.event.extendedProps || {};
+                            const root = document.createElement('div');
+                            root.className = 'fc-appointment__content';
 
-                        const clamp = (value, limit = 70) => {
-                            if (!value) return '';
-                            const text = String(value);
-                            return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
-                        };
+                            const clamp = (value, limit = 70) => {
+                                if (!value) return '';
+                                const text = String(value);
+                                return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
+                            };
 
-                        const fallbackTime = () => {
-                            if (!arg.event?.start) return '';
-                            const lang = document.documentElement.lang || 'es';
-                            const fmt = new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit' });
-                            const start = fmt.format(arg.event.start);
-                            if (!arg.event.end) return start;
-                            return `${start} – ${fmt.format(arg.event.end)}`;
-                        };
+                            const fallbackTime = () => {
+                                if (!arg.event?.start) return '';
+                                const lang = document.documentElement.lang || 'es';
+                                const fmt = new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit' });
+                                const start = fmt.format(arg.event.start);
+                                if (!arg.event.end) return start;
+                                return `${start} – ${fmt.format(arg.event.end)}`;
+                            };
 
-                        const timeText = arg.timeText || fallbackTime();
+                            const timeText = arg.timeText || fallbackTime();
 
-                        if (timeText) {
-                            const time = document.createElement('div');
-                            time.className = 'fc-appointment__time';
-                            time.textContent = timeText;
-                            root.appendChild(time);
-                        }
+                            if (timeText) {
+                                const time = document.createElement('div');
+                                time.className = 'fc-appointment__time';
+                                time.textContent = timeText;
+                                root.appendChild(time);
+                            }
 
-                        const title = document.createElement('div');
-                        title.className = 'fc-appointment__title';
-                        title.textContent = clamp(arg.event.title || p.clientName || '{{ __('Cita') }}', 60);
-                        root.appendChild(title);
+                            const title = document.createElement('div');
+                            title.className = 'fc-appointment__title';
+                            title.textContent = clamp(arg.event.title || p.clientName || '{{ __('Cita') }}', 60);
+                            root.appendChild(title);
 
-                        const appendMeta = (value) => {
-                            if (!value) return;
-                            const meta = document.createElement('div');
-                            meta.className = 'fc-appointment__meta';
-                            const span = document.createElement('span');
-                            span.textContent = clamp(value, 70);
-                            meta.appendChild(span);
-                            root.appendChild(meta);
-                        };
+                            const appendMeta = (value) => {
+                                if (!value) return;
+                                const meta = document.createElement('div');
+                                meta.className = 'fc-appointment__meta';
+                                const span = document.createElement('span');
+                                span.textContent = clamp(value, 70);
+                                meta.appendChild(span);
+                                root.appendChild(meta);
+                            };
 
-                        appendMeta(p.serviceName ? `{{ __('Servicio') }}: ${p.serviceName}` : null);
-                        appendMeta(p.barberName ? `{{ __('Barbero') }}: ${p.barberName}` : null);
-                        appendMeta(p.barbershopName ? `{{ __('Barbería') }}: ${p.barbershopName}` : null);
-                        appendMeta(p.notes ? `{{ __('Notas') }}: ${p.notes}` : null);
+                            appendMeta(p.serviceName ? `{{ __('Servicio') }}: ${p.serviceName}` : null);
+                            appendMeta(p.barberName ? `{{ __('Barbero') }}: ${p.barberName}` : null);
+                            appendMeta(p.barbershopName ? `{{ __('Barbería') }}: ${p.barbershopName}` : null);
+                            appendMeta(p.notes ? `{{ __('Notas') }}: ${p.notes}` : null);
 
-                        return { domNodes: [root] };
-                    },
-                    eventDidMount(info) {
-                        const p = info.event.extendedProps || {};
-                        const lines = [
-                            (p.startsAt && p.endsAt) ? `${p.startsAt} → ${p.endsAt}` : (p.startsAt || ''),
-                            p.clientName ? `{{ __('Cliente') }}: ${p.clientName}` : null,
-                            p.barberName ? `{{ __('Barbero') }}: ${p.barberName}` : null,
-                            p.barbershopName ? `{{ __('Barbería') }}: ${p.barbershopName}` : null,
-                            p.serviceName ? `{{ __('Servicio') }}: ${p.serviceName}` : null,
-                            p.notes ? `{{ __('Notas') }}: ${p.notes}` : null,
-                        ].filter(Boolean);
-                        if (lines.length) info.el.setAttribute('title', lines.join('\n'));
-                    },
-                });
+                            return { domNodes: [root] };
+                        },
+                        eventDidMount(info) {
+                            const p = info.event.extendedProps || {};
+                            const lines = [
+                                (p.startsAt && p.endsAt) ? `${p.startsAt} → ${p.endsAt}` : (p.startsAt || ''),
+                                p.clientName ? `{{ __('Cliente') }}: ${p.clientName}` : null,
+                                p.barberName ? `{{ __('Barbero') }}: ${p.barberName}` : null,
+                                p.barbershopName ? `{{ __('Barbería') }}: ${p.barbershopName}` : null,
+                                p.serviceName ? `{{ __('Servicio') }}: ${p.serviceName}` : null,
+                                p.notes ? `{{ __('Notas') }}: ${p.notes}` : null,
+                            ].filter(Boolean);
+                            if (lines.length) info.el.setAttribute('title', lines.join('\n'));
+                        },
+                    });
 
-                document.getElementById('filter-barber')?.addEventListener('change', debounce(applyFilters, 80));
-                document.getElementById('filter-barbershop')?.addEventListener('change', debounce(applyFilters, 80));
+                    calendar.render();
+                }
 
-                calendar.render();
+                if (!listenersRegistered) {
+                    document.getElementById('filter-barber')?.addEventListener('change', debounce(applyFilters, 80));
+                    document.getElementById('filter-barbershop')?.addEventListener('change', debounce(applyFilters, 80));
+                    listenersRegistered = true;
+                }
+
                 applyFilters();
                 computeHeight();
             };
 
             readyEvents.forEach(e => document.addEventListener(e, init));
+            if (document.readyState !== 'loading') {
+                init();
+            }
             window.addEventListener('resize', debounce(computeHeight, 100));
         })();
     </script>
