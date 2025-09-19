@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Orchid\Screens;
 
+use App\Domain\Appointment\Entities\Appointment;
+use App\Domain\Barbershop\Entities\Barbershop;
+use App\Models\User;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 
@@ -16,7 +19,23 @@ class PlatformScreen extends Screen
      */
     public function query(): iterable
     {
-        return [];
+        $appointments = Appointment::query()
+            ->with(['client', 'barber', 'service', 'barbershop'])
+            ->orderBy('starts_at')
+            ->get();
+
+        return [
+            'appointments' => $appointments,
+            'barbers' => User::query()
+                ->select(['id', 'name'])
+                ->barbers()
+                ->orderBy('name')
+                ->get(),
+            'barbershops' => Barbershop::query()
+                ->select(['id', 'name'])
+                ->orderBy('name')
+                ->get(),
+        ];
     }
 
     /**
@@ -24,7 +43,7 @@ class PlatformScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Get Started';
+        return 'Dashboard';
     }
 
     /**
@@ -32,7 +51,7 @@ class PlatformScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'Welcome to your Orchid application.';
+        return 'Centraliza tu agenda de barbería.';
     }
 
     /**
@@ -53,8 +72,7 @@ class PlatformScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::view('platform::partials.update-assets'),
-            Layout::view('platform::partials.welcome'),
+            Layout::view('orchid.dashboard.calendar'),
         ];
     }
 }
