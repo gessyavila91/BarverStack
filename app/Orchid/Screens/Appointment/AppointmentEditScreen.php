@@ -6,6 +6,7 @@ use App\Domain\Appointment\Entities\Appointment;
 use App\Domain\Appointment\Rules\BarberRole;
 use App\Domain\Barbershop\Entities\Barbershop;
 use App\Domain\Client\Entities\Client;
+use App\Domain\Service\Entities\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,13 +20,14 @@ use Orchid\Support\Facades\Toast;
 
 class AppointmentEditScreen extends Screen
 {
-    public Appointment $appointment;
+    public ?Appointment $appointment = null;
 
     public string $permission = 'platform.appointments';
 
     public function query(Appointment $appointment): iterable
     {
-        $appointment->loadMissing(['client', 'barber', 'barbershop']);
+        $appointment->loadMissing(['client', 'barber', 'barbershop', 'service']);
+        $this->appointment = $appointment;
 
         return ['appointment' => $appointment];
     }
@@ -63,6 +65,11 @@ class AppointmentEditScreen extends Screen
                     ->title('Location')
                     ->fromModel(Barbershop::class, 'name')
                     ->required(),
+                Relation::make('appointment.service_id')
+                    ->title('Service')
+                    ->fromModel(Service::class, 'name')
+                    ->help('Select the service that will be performed during the appointment.')
+                    ->required(),
                 DateTimer::make('appointment.starts_at')
                     ->title('Start')
                     ->enableTime()
@@ -88,6 +95,7 @@ class AppointmentEditScreen extends Screen
             'client_id' => ['required', 'exists:clients,id'],
             'barber_id' => ['required', 'exists:users,id', new BarberRole()],
             'barbershop_id' => ['required', 'exists:barbershops,id'],
+            'service_id' => ['required', 'exists:services,id'],
             'starts_at' => ['required', 'date', 'after_or_equal:now'],
             'ends_at' => ['required', 'date', 'after:starts_at'],
             'notes' => ['nullable', 'string'],

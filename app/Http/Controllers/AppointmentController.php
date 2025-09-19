@@ -28,7 +28,7 @@ class AppointmentController extends Controller
 
     public function show(Appointment $appointment)
     {
-        return response()->json($appointment->load(['client', 'barber', 'barbershop']));
+        return response()->json($appointment->load(['client', 'barber', 'barbershop', 'service']));
     }
 
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
@@ -39,6 +39,7 @@ class AppointmentController extends Controller
                 'client_id',
                 'barber_id',
                 'barbershop_id',
+                'service_id',
                 'starts_at',
                 'ends_at',
                 'notes',

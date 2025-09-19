@@ -16,7 +16,7 @@ class AppointmentListScreen extends Screen
     {
         return [
             'appointments' => Appointment::query()
-                ->with(['client', 'barber', 'barbershop'])
+                ->with(['client', 'barber', 'barbershop', 'service'])
                 ->latest('starts_at')
                 ->paginate(),
         ];
@@ -51,6 +51,8 @@ class AppointmentListScreen extends Screen
                     ->render(fn (Appointment $appointment) => optional($appointment->barber)->name ?? '—'),
                 TD::make('barbershop.name', 'Location')
                     ->render(fn (Appointment $appointment) => optional($appointment->barbershop)->name ?? '—'),
+                TD::make('service.name', 'Service')
+                    ->render(fn (Appointment $appointment) => optional($appointment->service)->name ?? '—'),
             ]),
         ];
     }

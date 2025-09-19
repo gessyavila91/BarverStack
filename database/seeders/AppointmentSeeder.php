@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Domain\Appointment\Entities\Appointment;
 use App\Domain\Barbershop\Entities\Barbershop;
 use App\Domain\Client\Entities\Client;
+use App\Domain\Service\Entities\Service;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Seeder;
@@ -23,8 +24,9 @@ class AppointmentSeeder extends Seeder
             ->whereHas('roles', fn (Builder $query) => $query->where('slug', 'barber'))
             ->get();
         $barbershops = Barbershop::all();
+        $services = Service::all();
 
-        if ($clients->isEmpty() || $barbers->isEmpty() || $barbershops->isEmpty()) {
+        if ($clients->isEmpty() || $barbers->isEmpty() || $barbershops->isEmpty() || $services->isEmpty()) {
             return;
         }
 
@@ -41,6 +43,7 @@ class AppointmentSeeder extends Seeder
                     ->for($client, 'client')
                     ->for($barbers->random(), 'barber')
                     ->for($barbershops->random(), 'barbershop')
+                    ->for($services->random(), 'service')
                     ->create([
                         'starts_at' => $start,
                         'ends_at' => $end,

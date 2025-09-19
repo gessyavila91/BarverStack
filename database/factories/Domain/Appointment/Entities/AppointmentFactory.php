@@ -5,6 +5,7 @@ namespace Database\Factories\Domain\Appointment\Entities;
 use App\Domain\Appointment\Entities\Appointment;
 use App\Domain\Barbershop\Entities\Barbershop;
 use App\Domain\Client\Entities\Client;
+use App\Domain\Service\Entities\Service;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
@@ -25,6 +26,7 @@ class AppointmentFactory extends Factory
             'client_id' => Client::factory(),
             'barber_id' => User::factory(),
             'barbershop_id' => Barbershop::factory(),
+            'service_id' => Service::factory(),
             'starts_at' => $start,
             'ends_at' => $end,
             'notes' => $this->faker->optional()->sentence(),

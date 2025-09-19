@@ -3,6 +3,7 @@
 use App\Domain\Appointment\Entities\Appointment;
 use App\Domain\Barbershop\Entities\Barbershop;
 use App\Domain\Client\Entities\Client;
+use App\Domain\Service\Entities\Service;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->foreignIdFor(Client::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class, 'barber_id')->constrained('users')->cascadeOnDelete();
             $table->foreignIdFor(Barbershop::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Service::class)->constrained()->cascadeOnDelete();
             $table->timestamp('starts_at');
             $table->timestamp('ends_at');
             $table->text('notes')->nullable();

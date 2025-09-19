@@ -18,6 +18,7 @@ class UpdateAppointmentRequest extends FormRequest
             'client_id' => ['sometimes', 'required', 'exists:clients,id'],
             'barber_id' => ['sometimes', 'required', 'exists:users,id', new BarberRole()],
             'barbershop_id' => ['sometimes', 'required', 'exists:barbershops,id'],
+            'service_id' => ['sometimes', 'required', 'exists:services,id'],
             'starts_at' => ['sometimes', 'required_with:ends_at', 'date', 'after_or_equal:now'],
             'ends_at' => ['sometimes', 'required_with:starts_at', 'date', 'after:starts_at'],
             'notes' => ['sometimes', 'nullable', 'string'],

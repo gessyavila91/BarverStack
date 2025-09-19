@@ -18,6 +18,7 @@ class CreateAppointmentRequest extends FormRequest
             'client_id' => ['required', 'exists:clients,id'],
             'barber_id' => ['required', 'exists:users,id', new BarberRole()],
             'barbershop_id' => ['required', 'exists:barbershops,id'],
+            'service_id' => ['required', 'exists:services,id'],
             'starts_at' => ['required', 'date', 'after_or_equal:now'],
             'ends_at' => ['required', 'date', 'after:starts_at'],
             'notes' => ['nullable', 'string'],

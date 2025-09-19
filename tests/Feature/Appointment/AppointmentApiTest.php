@@ -5,6 +5,7 @@ namespace Tests\Feature\Appointment;
 use App\Domain\Appointment\Entities\Appointment;
 use App\Domain\Barbershop\Entities\Barbershop;
 use App\Domain\Client\Entities\Client;
+use App\Domain\Service\Entities\Service;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchid\Platform\Models\Role;
@@ -40,11 +41,13 @@ class AppointmentApiTest extends TestCase
         $client = Client::factory()->create();
         $barbershop = Barbershop::factory()->create();
         $barber = $this->createBarber();
+        $service = Service::factory()->create();
 
         $payload = [
             'client_id' => $client->id,
             'barber_id' => $barber->id,
             'barbershop_id' => $barbershop->id,
+            'service_id' => $service->id,
             'starts_at' => now()->addDay()->toISOString(),
             'ends_at' => now()->addDay()->addHour()->toISOString(),
             'notes' => 'Initial consultation',
@@ -66,11 +69,13 @@ class AppointmentApiTest extends TestCase
         $client = Client::factory()->create();
         $barbershop = Barbershop::factory()->create();
         $barber = $this->createBarber();
+        $service = Service::factory()->create();
 
         Appointment::factory()
             ->for($client, 'client')
             ->for($barber, 'barber')
             ->for($barbershop, 'barbershop')
+            ->for($service, 'service')
             ->create(['notes' => 'Follow-up']);
 
         $response = $this->getJson('/api/appointments');
@@ -84,11 +89,13 @@ class AppointmentApiTest extends TestCase
         $client = Client::factory()->create();
         $barbershop = Barbershop::factory()->create();
         $barber = $this->createBarber();
+        $service = Service::factory()->create();
 
         $appointment = Appointment::factory()
             ->for($client, 'client')
             ->for($barber, 'barber')
             ->for($barbershop, 'barbershop')
+            ->for($service, 'service')
             ->create();
 
         $response = $this->getJson('/api/appointments/'.$appointment->id);
@@ -102,15 +109,19 @@ class AppointmentApiTest extends TestCase
         $client = Client::factory()->create();
         $barbershop = Barbershop::factory()->create();
         $barber = $this->createBarber();
+        $service = Service::factory()->create();
+        $newService = Service::factory()->create();
 
         $appointment = Appointment::factory()
             ->for($client, 'client')
             ->for($barber, 'barber')
             ->for($barbershop, 'barbershop')
+            ->for($service, 'service')
             ->create();
 
         $payload = [
             'notes' => 'Updated note',
+            'service_id' => $newService->id,
         ];
 
         $response = $this->putJson('/api/appointments/'.$appointment->id, $payload);
@@ -129,11 +140,13 @@ class AppointmentApiTest extends TestCase
         $client = Client::factory()->create();
         $barbershop = Barbershop::factory()->create();
         $barber = $this->createBarber();
+        $service = Service::factory()->create();
 
         $appointment = Appointment::factory()
             ->for($client, 'client')
             ->for($barber, 'barber')
             ->for($barbershop, 'barbershop')
+            ->for($service, 'service')
             ->create();
 
         $response = $this->deleteJson('/api/appointments/'.$appointment->id);
@@ -148,6 +161,6 @@ class AppointmentApiTest extends TestCase
         $response = $this->postJson('/api/appointments', []);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['client_id', 'barber_id', 'barbershop_id', 'starts_at', 'ends_at']);
+            ->assertJsonValidationErrors(['client_id', 'barber_id', 'barbershop_id', 'service_id', 'starts_at', 'ends_at']);
     }
 }
