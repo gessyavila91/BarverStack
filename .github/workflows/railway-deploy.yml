@@ -2,56 +2,15 @@ name: Deploy to Railway
 
 on:
   push:
-    branches:
-      - main
-      - test
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
   deploy:
-    name: Trigger Railway deployment
     runs-on: ubuntu-latest
-
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      SVC_ID: my-service-id
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install Railway CLI and deploy
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-          RAILWAY_ENVIRONMENT: ${{ secrets.RAILWAY_ENVIRONMENT }}
-          RAILWAY_SERVICE: ${{ secrets.RAILWAY_SERVICE }}
-        run: |
-          set -euo pipefail
-
-          if [ -z "${RAILWAY_TOKEN}" ]; then
-            echo "Missing RAILWAY_TOKEN secret."
-            exit 1
-          fi
-
-          npm install -g @railway/cli
-
-          railway login --token "${RAILWAY_TOKEN}"
-
-          if [ -n "${RAILWAY_PROJECT_ID:-}" ]; then
-            railway link --project "${RAILWAY_PROJECT_ID}"
-          fi
-
-          deploy_command="railway up"
-
-          if [ -n "${RAILWAY_SERVICE:-}" ]; then
-            deploy_command="${deploy_command} --service ${RAILWAY_SERVICE}"
-          fi
-
-          if [ -n "${RAILWAY_ENVIRONMENT:-}" ]; then
-            deploy_command="${deploy_command} --environment ${RAILWAY_ENVIRONMENT}"
-          fi
-
-          echo "Running: ${deploy_command}"
-          eval "${deploy_command}"
+      - uses: actions/checkout@v3
+      - run: railway up --service=${{ secrets.RAILWAY_SERVICE_ID }}
