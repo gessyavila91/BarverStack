@@ -9,8 +9,22 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/railwayapp/cli:latest
     env:
-      SVC_ID: my-service-id
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      # Requeridos
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}         # token de proyecto
+      RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }} # opcional si ya está linkeado
+      RAILWAY_ENVIRONMENT: production                     # o usa un secret/var
+      RAILWAY_SERVICE_NAME: BarverStack                   # << nombre del servicio, NO el id
     steps:
-      - uses: actions/checkout@v3
-      - run: railway up --service=${{ secrets.RAILWAY_SERVICE_ID }}
+      - uses: actions/checkout@v4
+
+      - name: Deploy
+        run: |
+          set -euo pipefail
+
+          # (Opcional) enlaza el repo al proyecto para evitar prompts interactivos
+          if [ -n "${RAILWAY_PROJECT_ID:-}" ]; then
+            railway link --project "$RAILWAY_PROJECT_ID"
+          fi
+
+          # Despliegue
+          railway up --service "$RAILWAY_SERVICE_NAME" --environment "$RAILWAY_ENVIRONMENT"
