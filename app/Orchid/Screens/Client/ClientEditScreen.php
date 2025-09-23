@@ -44,7 +44,15 @@ class ClientEditScreen extends Screen
                     ->title('Name')
                     ->required(),
                 Input::make('client.phone')
-                    ->title('Phone'),
+                    ->title('Phone')
+                    ->mask([
+                        'mask' => [
+                            '+99 999 999 9999',
+                            '(999) 999-9999',
+                        ],
+                        'greedy' => false,
+                        'removeMaskOnSubmit' => true,
+                    ]),
                 Input::make('client.email')
                     ->title('Email'),
                 DateTimer::make('client.birthday')

@@ -3,9 +3,13 @@
 declare(strict_types=1);
 
 use App\Orchid\Screens\PlatformScreen;
+use App\Orchid\Screens\Appointment\AppointmentEditScreen;
+use App\Orchid\Screens\Appointment\AppointmentListScreen;
+use App\Orchid\Screens\Barbershop\BarbershopEditScreen;
 use App\Orchid\Screens\Barbershop\BarbershopListScreen;
 use App\Orchid\Screens\Client\ClientEditScreen;
 use App\Orchid\Screens\Client\ClientListScreen;
+use App\Orchid\Screens\Service\ServiceEditScreen;
 use App\Orchid\Screens\Service\ServiceListScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
@@ -81,7 +85,14 @@ Route::screen('roles', RoleListScreen::class)
 
 // Custom business screens
 Route::screen('barbershops', BarbershopListScreen::class)->name('platform.barbershops');
+Route::screen('barbershops/create', BarbershopEditScreen::class)->name('platform.barbershops.create');
+Route::screen('barbershops/{barbershop}/edit', BarbershopEditScreen::class)->name('platform.barbershops.edit');
 Route::screen('clients', ClientListScreen::class)->name('platform.clients');
 Route::screen('clients/create', ClientEditScreen::class)->name('platform.clients.create');
 Route::screen('clients/{client}/edit', ClientEditScreen::class)->name('platform.clients.edit');
 Route::screen('services', ServiceListScreen::class)->name('platform.services');
+Route::screen('services/create', ServiceEditScreen::class)->name('platform.services.create');
+Route::screen('services/{service}/edit', ServiceEditScreen::class)->name('platform.services.edit');
+Route::screen('appointments', AppointmentListScreen::class)->name('platform.appointments');
+Route::screen('appointments/create', AppointmentEditScreen::class)->name('platform.appointments.create');
+Route::screen('appointments/{appointment}/edit', AppointmentEditScreen::class)->name('platform.appointments.edit');

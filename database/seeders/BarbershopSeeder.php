@@ -9,6 +9,19 @@ class BarbershopSeeder extends Seeder
 {
     public function run(): void
     {
-        Barbershop::factory()->count(5)->create();
+        if (Barbershop::query()->exists()) {
+            return;
+        }
+
+        $faker = fake();
+
+        foreach (range(1, 12) as $index) {
+            Barbershop::query()->create([
+                'name' => $faker->unique()->company(),
+                'address' => $faker->address(),
+            ]);
+        }
+
+        $faker->unique(true);
     }
 }

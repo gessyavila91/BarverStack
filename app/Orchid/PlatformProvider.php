@@ -26,7 +26,9 @@ class PlatformProvider extends OrchidServiceProvider
     }
 
     /**
-     * Register the application menu.
+     * Backwards compatible hook for legacy Orchid versions.
+     *
+     * @deprecated use registerMainMenu instead.
      *
      * @return Menu[]
      */
@@ -53,6 +55,11 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.services')
                 ->permission('platform.services'),
 
+            Menu::make('Appointments')
+                ->icon('bs.calendar-check')
+                ->route('platform.appointments')
+                ->permission('platform.appointments'),
+
             Menu::make(__('Users'))
                 ->icon('bs.people')
                 ->route('platform.systems.users')
@@ -67,7 +74,9 @@ class PlatformProvider extends OrchidServiceProvider
     }
 
     /**
-     * Register permissions for the application.
+     * Backwards compatible hook for legacy Orchid versions.
+     *
+     * @deprecated use registerPermissions instead.
      *
      * @return ItemPermission[]
      */
@@ -81,7 +90,8 @@ class PlatformProvider extends OrchidServiceProvider
             ItemPermission::group('Content')
                 ->addPermission('platform.clients', 'Clients')
                 ->addPermission('platform.barbershops', 'Barbershops')
-                ->addPermission('platform.services', 'Services'),
+                ->addPermission('platform.services', 'Services')
+                ->addPermission('platform.appointments', 'Appointments'),
         ];
     }
 }
